@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="f32_divider_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="f32_divider_tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="917.541 ns"></ZoomStartTime>
+      <ZoomEndTime time="1,016.492 ns"></ZoomEndTime>
+      <Cursor1Time time="1,000.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="521"></NameColumnWidth>
+      <ValueColumnWidth column_width="446"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="22" />
+   <wvobject fp_name="/f32_divider_tb/CLK" type="logic">
+      <obj_property name="ElementShortName">CLK</obj_property>
+      <obj_property name="ObjectShortName">CLK</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/RST" type="logic">
+      <obj_property name="ElementShortName">RST</obj_property>
+      <obj_property name="ObjectShortName">RST</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/EN" type="logic">
+      <obj_property name="ElementShortName">EN</obj_property>
+      <obj_property name="ObjectShortName">EN</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/RES" type="array">
+      <obj_property name="ElementShortName">RES[31:0]</obj_property>
+      <obj_property name="ObjectShortName">RES[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/READY" type="logic">
+      <obj_property name="ElementShortName">READY</obj_property>
+      <obj_property name="ObjectShortName">READY</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/NAN" type="logic">
+      <obj_property name="ElementShortName">NAN</obj_property>
+      <obj_property name="ObjectShortName">NAN</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/INF" type="logic">
+      <obj_property name="ElementShortName">INF</obj_property>
+      <obj_property name="ObjectShortName">INF</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/UUT/sMantRes" type="array">
+      <obj_property name="ElementShortName">sMantRes[23:0]</obj_property>
+      <obj_property name="ObjectShortName">sMantRes[23:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/cTestInB" type="array">
+      <obj_property name="ElementShortName">cTestInB[31:0]</obj_property>
+      <obj_property name="ObjectShortName">cTestInB[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/cTestInA" type="array">
+      <obj_property name="ElementShortName">cTestInA[31:0]</obj_property>
+      <obj_property name="ObjectShortName">cTestInA[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/UUT/sExpRes" type="array">
+      <obj_property name="ElementShortName">sExpRes[8:0]</obj_property>
+      <obj_property name="ObjectShortName">sExpRes[8:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/UUT/sDivStage" type="other">
+      <obj_property name="ElementShortName">sDivStage</obj_property>
+      <obj_property name="ObjectShortName">sDivStage</obj_property>
+   </wvobject>
+   <wvobject type="divider" fp_name="divider20">
+      <obj_property name="label">Binary Divider</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/UUT/sBinDivQRes" type="array">
+      <obj_property name="ElementShortName">sBinDivQRes[31:0]</obj_property>
+      <obj_property name="ObjectShortName">sBinDivQRes[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/UUT/sBinDivFRes" type="array">
+      <obj_property name="ElementShortName">sBinDivFRes[31:0]</obj_property>
+      <obj_property name="ObjectShortName">sBinDivFRes[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/UUT/sBinDivNAN" type="logic">
+      <obj_property name="ElementShortName">sBinDivNAN</obj_property>
+      <obj_property name="ObjectShortName">sBinDivNAN</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/UUT/sBinDivInf" type="logic">
+      <obj_property name="ElementShortName">sBinDivInf</obj_property>
+      <obj_property name="ObjectShortName">sBinDivInf</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/UUT/sBinDivReady" type="logic">
+      <obj_property name="ElementShortName">sBinDivReady</obj_property>
+      <obj_property name="ObjectShortName">sBinDivReady</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/UUT/sBinDivEn" type="logic">
+      <obj_property name="ElementShortName">sBinDivEn</obj_property>
+      <obj_property name="ObjectShortName">sBinDivEn</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/UUT/BinDiv/sDivStage" type="other">
+      <obj_property name="ElementShortName">sDivStage</obj_property>
+      <obj_property name="ObjectShortName">sDivStage</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/UUT/BinDiv/sA" type="array">
+      <obj_property name="ElementShortName">sA[31:0]</obj_property>
+      <obj_property name="ObjectShortName">sA[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_divider_tb/UUT/BinDiv/sB" type="array">
+      <obj_property name="ElementShortName">sB[31:0]</obj_property>
+      <obj_property name="ObjectShortName">sB[31:0]</obj_property>
+   </wvobject>
+</wave_config>

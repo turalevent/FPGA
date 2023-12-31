@@ -1,24 +1,23 @@
 # FPGA
 FPGA projects and libraries
 
-Folder Structure:
-|
-|
-|__prj
+### Folder Structure
+
+|--prj
 |  |
-|  |___ xxx_prj : project folder
-|      |__ src  : source files' folder
-|      |   |__ vhd: vhdl source files
-|      |   |__ v  : verilog source files
-|      |   |__ sch: schematic source files
-|      |   |__ c_cpp: c/c++ source files
-|      |__ tbw  : test-bench files' folder
+|  |--- xxx_prj : project folder
+|      |-- src  : source files' folder
+|      |   |-- vhd: vhdl source files
+|      |   |-- v  : verilog source files
+|      |   |-- sch: schematic source files
+|      |   |-- c_cpp: c/c++ source files
+|      |---tbw  : test-bench files' folder
 |
-|__lib
+|--lib
    |
-   |___xxx_ip : IP folder
-       |__src : source folder
-       |__xgui: GUI files' folder
+   |---xxx_ip : IP folder
+       |--src : source folder
+       |--xgui: GUI files' folder
        
    
 

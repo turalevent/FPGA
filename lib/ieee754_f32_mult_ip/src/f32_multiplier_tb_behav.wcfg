@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="f32_multiplier_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="f32_multiplier_tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="169.701 ns"></ZoomEndTime>
+      <Cursor1Time time="1,000.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="363"></NameColumnWidth>
+      <ValueColumnWidth column_width="214"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="12" />
+   <wvobject fp_name="/f32_multiplier_tb/CLK" type="logic">
+      <obj_property name="ElementShortName">CLK</obj_property>
+      <obj_property name="ObjectShortName">CLK</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_multiplier_tb/RST" type="logic">
+      <obj_property name="ElementShortName">RST</obj_property>
+      <obj_property name="ObjectShortName">RST</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_multiplier_tb/EN" type="logic">
+      <obj_property name="ElementShortName">EN</obj_property>
+      <obj_property name="ObjectShortName">EN</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_multiplier_tb/INF" type="logic">
+      <obj_property name="ElementShortName">INF</obj_property>
+      <obj_property name="ObjectShortName">INF</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_multiplier_tb/ERR" type="logic">
+      <obj_property name="ElementShortName">ERR</obj_property>
+      <obj_property name="ObjectShortName">ERR</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_multiplier_tb/READY" type="logic">
+      <obj_property name="ElementShortName">READY</obj_property>
+      <obj_property name="ObjectShortName">READY</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_multiplier_tb/RES" type="array">
+      <obj_property name="ElementShortName">RES[31:0]</obj_property>
+      <obj_property name="ObjectShortName">RES[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_multiplier_tb/cTestInA" type="array">
+      <obj_property name="ElementShortName">cTestInA[31:0]</obj_property>
+      <obj_property name="ObjectShortName">cTestInA[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_multiplier_tb/cTestInB" type="array">
+      <obj_property name="ElementShortName">cTestInB[31:0]</obj_property>
+      <obj_property name="ObjectShortName">cTestInB[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_multiplier_tb/UUT/sMultStage" type="other">
+      <obj_property name="ElementShortName">sMultStage</obj_property>
+      <obj_property name="ObjectShortName">sMultStage</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_multiplier_tb/UUT/sExpRes" type="array">
+      <obj_property name="ElementShortName">sExpRes[8:0]</obj_property>
+      <obj_property name="ObjectShortName">sExpRes[8:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/f32_multiplier_tb/UUT/sMantRes" type="array">
+      <obj_property name="ElementShortName">sMantRes[47:0]</obj_property>
+      <obj_property name="ObjectShortName">sMantRes[47:0]</obj_property>
+   </wvobject>
+</wave_config>

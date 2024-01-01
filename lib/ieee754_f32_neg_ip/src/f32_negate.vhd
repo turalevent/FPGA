@@ -55,10 +55,8 @@ architecture LvnT of f32_negate is
 	--
 	-- Signals
 	--
-	signal sReady  : std_logic;
-	signal sEN     : std_logic;
-	signal sEnDly1 : std_logic;
-	signal sEnRise : std_logic;
+	signal sReady: std_logic;
+	signal sEnB  : std_logic;
    
 begin
 
@@ -87,8 +85,9 @@ begin
         RES		<= (others=>'0');
         sReady<= cLow;
       else
+        sEnB  <= EN;
         sReady<= cLow;
-        if(sEnRise = cHigh) then
+        if((sEnB = cHigh) AND (EN = cLow)) then
           if(A = 0) then
             RES	<= (others=>'0');
           else
@@ -99,22 +98,6 @@ begin
       end if;
     end if;
 	end process;
-
-	-- pRiseDedection process
-	-- Rising Edge detection of any required signal
-	pRiseDetection: process(CLK, RST) 
-	begin
-		
-    if(rising_edge(CLK)) then
-      if(RST = cHigh) then
-        sEN	    <= cLow;
-        sEnDly1	<= cLow;
-      else
-        sEN     <= EN;
-        sEnDly1 <= sEN;
-      end if;
-    end if;
-	end process;
  
 	--
 	-- Logic --------------------------------------------------
@@ -122,7 +105,7 @@ begin
     
 	-- Inputs
 	--
-  
+
 	-- Outputs
 	--
 	READY <= sReady;
@@ -132,6 +115,6 @@ begin
 
 	-- Internals
 	--
-  sEnRise <= sEN AND (NOT sEnDly1);
+
 
 end LvnT;

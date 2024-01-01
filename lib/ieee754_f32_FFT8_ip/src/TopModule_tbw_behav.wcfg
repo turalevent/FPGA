@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="TopModule_tbw_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="TopModule_tbw" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="448.201 ns"></ZoomEndTime>
+      <Cursor1Time time="55.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="521"></NameColumnWidth>
+      <ValueColumnWidth column_width="428"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="30" />
+   <wave_markers>
+      <marker time="775000" label="" />
+      <marker time="50000" label="" />
+   </wave_markers>
+   <wvobject fp_name="/TopModule_tbw/CLK" type="logic">
+      <obj_property name="ElementShortName">CLK</obj_property>
+      <obj_property name="ObjectShortName">CLK</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/RST" type="logic">
+      <obj_property name="ElementShortName">RST</obj_property>
+      <obj_property name="ObjectShortName">RST</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/EN" type="logic">
+      <obj_property name="ElementShortName">EN</obj_property>
+      <obj_property name="ObjectShortName">EN</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/READY" type="logic">
+      <obj_property name="ElementShortName">READY</obj_property>
+      <obj_property name="ObjectShortName">READY</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/NAN" type="logic">
+      <obj_property name="ElementShortName">NAN</obj_property>
+      <obj_property name="ObjectShortName">NAN</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/INF" type="logic">
+      <obj_property name="ElementShortName">INF</obj_property>
+      <obj_property name="ObjectShortName">INF</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/x0" type="array">
+      <obj_property name="ElementShortName">x0[31:0]</obj_property>
+      <obj_property name="ObjectShortName">x0[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/x1" type="array">
+      <obj_property name="ElementShortName">x1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">x1[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/x2" type="array">
+      <obj_property name="ElementShortName">x2[31:0]</obj_property>
+      <obj_property name="ObjectShortName">x2[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/x3" type="array">
+      <obj_property name="ElementShortName">x3[31:0]</obj_property>
+      <obj_property name="ObjectShortName">x3[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/x4" type="array">
+      <obj_property name="ElementShortName">x4[31:0]</obj_property>
+      <obj_property name="ObjectShortName">x4[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/x5" type="array">
+      <obj_property name="ElementShortName">x5[31:0]</obj_property>
+      <obj_property name="ObjectShortName">x5[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/x6" type="array">
+      <obj_property name="ElementShortName">x6[31:0]</obj_property>
+      <obj_property name="ObjectShortName">x6[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/x7" type="array">
+      <obj_property name="ElementShortName">x7[31:0]</obj_property>
+      <obj_property name="ObjectShortName">x7[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/X0R" type="array">
+      <obj_property name="ElementShortName">X0R[31:0]</obj_property>
+      <obj_property name="ObjectShortName">X0R[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/X0I" type="array">
+      <obj_property name="ElementShortName">X0I[31:0]</obj_property>
+      <obj_property name="ObjectShortName">X0I[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/X1R" type="array">
+      <obj_property name="ElementShortName">X1R[31:0]</obj_property>
+      <obj_property name="ObjectShortName">X1R[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/X1I" type="array">
+      <obj_property name="ElementShortName">X1I[31:0]</obj_property>
+      <obj_property name="ObjectShortName">X1I[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/X2R" type="array">
+      <obj_property name="ElementShortName">X2R[31:0]</obj_property>
+      <obj_property name="ObjectShortName">X2R[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/X2I" type="array">
+      <obj_property name="ElementShortName">X2I[31:0]</obj_property>
+      <obj_property name="ObjectShortName">X2I[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/X3R" type="array">
+      <obj_property name="ElementShortName">X3R[31:0]</obj_property>
+      <obj_property name="ObjectShortName">X3R[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/X3I" type="array">
+      <obj_property name="ElementShortName">X3I[31:0]</obj_property>
+      <obj_property name="ObjectShortName">X3I[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/X4R" type="array">
+      <obj_property name="ElementShortName">X4R[31:0]</obj_property>
+      <obj_property name="ObjectShortName">X4R[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/X4I" type="array">
+      <obj_property name="ElementShortName">X4I[31:0]</obj_property>
+      <obj_property name="ObjectShortName">X4I[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/X5R" type="array">
+      <obj_property name="ElementShortName">X5R[31:0]</obj_property>
+      <obj_property name="ObjectShortName">X5R[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/X5I" type="array">
+      <obj_property name="ElementShortName">X5I[31:0]</obj_property>
+      <obj_property name="ObjectShortName">X5I[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/X6R" type="array">
+      <obj_property name="ElementShortName">X6R[31:0]</obj_property>
+      <obj_property name="ObjectShortName">X6R[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/X6I" type="array">
+      <obj_property name="ElementShortName">X6I[31:0]</obj_property>
+      <obj_property name="ObjectShortName">X6I[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/X7R" type="array">
+      <obj_property name="ElementShortName">X7R[31:0]</obj_property>
+      <obj_property name="ObjectShortName">X7R[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TopModule_tbw/X7I" type="array">
+      <obj_property name="ElementShortName">X7I[31:0]</obj_property>
+      <obj_property name="ObjectShortName">X7I[31:0]</obj_property>
+   </wvobject>
+</wave_config>

@@ -14,5 +14,5 @@ Various FPGA projects and libraries
 
 You can find further information by reading related documents that I put inside the **doc** folder.
 
-After you download the library folder on your computer, you can add the folder as your IP repository through the Setting->IP in Vivado to be able to use them in your board-design.
+After you download the library folder on your computer, you can add the folder as your IP repository through the Setting->IP in Vivado to be able to use them in your block-design.
 ![image](https://github.com/turalevent/FPGA/assets/22763063/7a51a3e2-376b-4bd6-b217-be6465200d68)

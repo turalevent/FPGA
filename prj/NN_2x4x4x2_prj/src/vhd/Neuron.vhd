@@ -110,10 +110,10 @@ architecture LvnT of Neuron is
 	--
 	
 	-- General
-	constant High_c 		: std_logic := '1';
-	constant Low_c  		: std_logic := '0';
+	constant cHigh 		  : std_logic := '1';
+	constant cLow  		  : std_logic := '0';
 	-- Multiplier Counter Limit
-	constant MaxMultCnt_c: integer := 3;
+	constant cMaxMultCnt: integer := 3;
     
 	-- 
 	-- Types
@@ -125,31 +125,31 @@ architecture LvnT of Neuron is
 	--
 
 	-- Typed Signals
-	signal MultResArray_s: Array4x32_t;
+	signal sMultResArray: Array4x32_t;
    
 	-- General Signals
-	signal Trig_s			: std_logic;
-	signal bTrig_s			: std_logic;
-	signal ResRdy_s		: std_logic;
-	signal NeuronRes_s	: std_logic_vector(31 downto 0);
+	signal sTrig			: std_logic;
+	signal sTrigDly			: std_logic;
+	signal sResRdy		: std_logic;
+	signal sNeuronRes	: std_logic_vector(31 downto 0);
 	
 	-- Sigmoid
-	signal CalcSigm_s		: std_logic;
+	signal sCalcSigm		: std_logic;
 
 	-- Floating Point Adder-1 signals
-	signal AddOND_s		: std_logic;
-	signal AddDone_s		: std_logic;
-	signal AddIn1_s		: std_logic_vector(31 downto 0);
-	signal AddIn2_s		: std_logic_vector(31 downto 0);
-	signal AddRes_s		: std_logic_vector(31 downto 0);
+	signal sAddOND		: std_logic;
+	signal sAddDone		: std_logic;
+	signal sAddIn1		: std_logic_vector(31 downto 0);
+	signal sAddIn2		: std_logic_vector(31 downto 0);
+	signal sAddRes		: std_logic_vector(31 downto 0);
 
 	-- Floating Point Multiplier signals
-	signal MultOND_s		: std_logic;
-	signal MultDone_s		: std_logic;
-	signal MultIn1_s		: std_logic_vector(31 downto 0);
-	signal MultIn2_s		: std_logic_vector(31 downto 0);
-	signal MultRes_s		: std_logic_vector(31 downto 0);
-	signal MultCnt_s		: integer range 0 to MaxMultCnt_c;
+	signal sMultOND		: std_logic;
+	signal sMultDone	: std_logic;
+	signal sMultIn1		: std_logic_vector(31 downto 0);
+	signal sMultIn2		: std_logic_vector(31 downto 0);
+	signal sMultRes		: std_logic_vector(31 downto 0);
+	signal sMultCnt		: integer range 0 to cMaxMultCnt;
 		
 
 begin
@@ -168,10 +168,10 @@ begin
 	PORT MAP(
 		CLK   => CLK,
 		RST   => RST,
-		TRIG  => CalcSigm_s,
-		INPUT => AddRes_s,
-		RDY	=> ResRdy_s,
-		OUTPUT=> NeuronRes_s
+		TRIG  => sCalcSigm,
+		INPUT => sAddRes,
+		RDY	  => sResRdy,
+		OUTPUT=> sNeuronRes
 	);
 
 	-- Adder_cmp component
@@ -180,13 +180,13 @@ begin
 	PORT MAP(
 		CLK   => CLK,
 		RST   => RST,
-		A	    => AddIn1_s,
-		B	    => AddIn2_s,
-		EN    => AddOND_s,
+		A	    => sAddIn1,
+		B	    => sAddIn2,
+		EN    => sAddOND,
 		NAN   => open,
 		INF   => open,
-		READY => AddDone_s,
-		RES   => AddRes_s
+		READY => sAddDone,
+		RES   => sAddRes
 	);
 
 	-- Mult_cmp component
@@ -195,13 +195,13 @@ begin
 	PORT MAP(
 		CLK   => CLK,
 		RST   => RST,
-		A	    => MultIn1_s,
-		B	    => MultIn2_s,
-		EN    => MultOND_s,
+		A	    => sMultIn1,
+		B	    => sMultIn2,
+		EN    => sMultOND,
 		NAN   => open,
 		INF   => open,
-		READY => MultDone_s,
-		RES   => MultRes_s
+		READY => sMultDone,
+		RES   => sMultRes
 	);
 
 
@@ -210,97 +210,85 @@ begin
 	Main_p : process( CLK, RST )
 		variable Ctr_v : integer range 0 to 4;
 	begin
-
-		if(RST = High_c) then
-			
-			AddOND_s 	<= Low_c;
-			CalcSigm_s	<= Low_c;
-			AddIn1_s		<= (others=>'0');
-			AddIn2_s		<= (others=>'0');
-			Ctr_v			:= 0;
-			
-		elsif( rising_edge( CLK )) then
-
-			AddOND_s	 	<= Low_c;
-			CalcSigm_s	<= Low_c;
-			
-			-- Trig Adder-1 & Adder-2
-			if((MultCnt_s = 3) AND (MultDone_s = High_c)) then
-				AddIn1_s	<= MultResArray_s(Ctr_v)(31 downto 0);
-				AddIn2_s	<= MultResArray_s(Ctr_v+1)(31 downto 0);
-				AddOND_s	<= High_c;
-				Ctr_v		:= Ctr_v + 2;				
-			end if;
-			
-			if(AddDone_s = High_c) then				
-				if(Ctr_v = 5) then
-					CalcSigm_s<= High_c;		
-					Ctr_v		 := 0;
-				else
-					if(Ctr_v = 4) then
-						AddIn1_s	<= WGH5;
-					else
-						AddIn1_s	<= MultResArray_s(Ctr_v)(31 downto 0);
-					end if;
-					AddIn2_s	<= AddRes_s;				
-					AddOND_s	<= High_c;
-					Ctr_v		:= Ctr_v + 1;				
-				end if;
-			end if;
-
-		end if;
-
+    if(rising_edge(CLK)) then
+      if(RST = cHigh) then
+        sAddOND 	<= cLow;
+        sCalcSigm	<= cLow;
+        sAddIn1		<= (others=>'0');
+        sAddIn2		<= (others=>'0');
+        Ctr_v			:= 0;
+      else
+        sAddOND	 	<= cLow;
+        sCalcSigm	<= cLow;		
+        -- Trig Adder-1 & Adder-2
+        if((sMultCnt = 3) AND (sMultDone = cHigh)) then
+          sAddIn1	<= sMultResArray(Ctr_v)(31 downto 0);
+          sAddIn2	<= sMultResArray(Ctr_v+1)(31 downto 0);
+          sAddOND	<= cHigh;
+          Ctr_v		:= Ctr_v + 2;				
+        end if;
+        if(sAddDone = cHigh) then				
+          if(Ctr_v = 5) then
+            sCalcSigm<= cHigh;		
+            Ctr_v		 := 0;
+          else
+            if(Ctr_v = 4) then
+              sAddIn1	<= WGH5;
+            else
+              sAddIn1	<= sMultResArray(Ctr_v)(31 downto 0);
+            end if;
+            sAddIn2	<= sAddRes;				
+            sAddOND	<= cHigh;
+            Ctr_v		:= Ctr_v + 1;				
+          end if;
+        end if;
+      end if;
+    end if;
 	end process;
 
 	-- MultCtrl_p process
 	-- Multiplier Control process
 	MultCtrl_p : process( CLK, RST )
 	begin
-
-		if(RST = High_c) then
-		
-			MultCnt_s 		<= 0;
-			MultOND_s 		<= Low_c;
-			MultResArray_s	<= (others=>(others=>'0'));
-			
-		elsif( rising_edge( CLK )) then
-
-			MultOND_s <= Low_c;
-
-			-- Trig Multiplier
-			if(bTrig_s = Low_c AND Trig_s = High_c) then
-				MultCnt_s 		<= 0;
-				MultOND_s 		<= High_c;
-				MultResArray_s	<= (others=>(others=>'0'));
-			end if;
-
-			if(MultDone_s = High_c) then
-				MultResArray_s(MultCnt_s)(31 downto 0)	<= MultRes_s;
-				if(MultCnt_s = MaxMultCnt_c) then
-					MultCnt_s<= 0;
-				else
-					MultCnt_s<= MultCnt_s + 1;
-					MultOND_s<= High_c;
-				end if;
-			end if;
-
-		end if;
-
+    if(rising_edge(CLK)) then
+      if(RST = cHigh) then
+        sMultCnt 		<= 0;
+        sMultOND 		<= cLow;
+        sMultResArray	<= (others=>(others=>'0'));
+      else
+        sMultOND <= cLow;
+        -- Trig Multiplier
+        if(sTrigDly = cLow AND sTrig = cHigh) then
+          sMultCnt 		<= 0;
+          sMultOND 		<= cHigh;
+          sMultResArray	<= (others=>(others=>'0'));
+        end if;
+        if(sMultDone = cHigh) then
+          sMultResArray(sMultCnt)(31 downto 0)	<= sMultRes;
+          if(sMultCnt = cMaxMultCnt) then
+            sMultCnt<= 0;
+          else
+            sMultCnt<= sMultCnt + 1;
+            sMultOND<= cHigh;
+          end if;
+        end if;
+      end if;
+    end if;
 	end process;
 
 	-- Buf_p process
 	--
 	Buf_p : process( CLK, RST )
 	begin
-
-		if(RST = High_c) then
-			Trig_s 	<= Low_c;
-			bTrig_s 	<= Low_c;
-		elsif( rising_edge( CLK )) then
-			Trig_s 	<= TRIG;
-			bTrig_s 	<= Trig_s;
-		end if;
-
+    if(rising_edge(CLK)) then
+      if(RST = cHigh) then
+        sTrig 	<= cLow;
+        sTrigDly 	<= cLow;
+      else
+        sTrig 	<= TRIG;
+        sTrigDly 	<= sTrig;
+      end if;
+    end if;
 	end process;
 
 	--
@@ -312,22 +300,22 @@ begin
 
 	-- Outputs
 	--
-	RDY		<= ResRdy_s;
-	OUTPUT	<= NeuronRes_s;
+	RDY		<= sResRdy;
+	OUTPUT<= sNeuronRes;
 
 	-- InOuts
 	--
 
 	-- Internals
 	--
-	MultIn1_s<= INPUT1	when	MultCnt_s = 0 else
-					INPUT2	when	MultCnt_s = 1 else
-					INPUT3	when	MultCnt_s = 2 else
-					INPUT4;
+	sMultIn1<= INPUT1	when	sMultCnt = 0 else
+					   INPUT2	when	sMultCnt = 1 else
+					   INPUT3	when	sMultCnt = 2 else
+					   INPUT4;
 
-	MultIn2_s<= WGH1		when	MultCnt_s = 0 else
-					WGH2		when	MultCnt_s = 1 else
-					WGH3		when	MultCnt_s = 2 else
-					WGH4;
+	sMultIn2<= WGH1		when	sMultCnt = 0 else
+					   WGH2		when	sMultCnt = 1 else
+					   WGH3		when	sMultCnt = 2 else
+					   WGH4;
 
 end LvnT;

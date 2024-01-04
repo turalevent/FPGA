@@ -87,31 +87,31 @@ architecture LvnT of HiddenLayer is
 	--
 	
 	-- General
-	constant High_c 		: std_logic 	:= '1';
-	constant Low_c  		: std_logic 	:= '0';
+	constant cHigh 		: std_logic 	:= '1';
+	constant cLow  		: std_logic 	:= '0';
 	
 	--
 	-- Signals
 	--	
 	
 	-- General Signals
-	signal WghSet_s		: std_logic;
-	signal Trig_s			: std_logic;
-	signal bTrig_s			: std_logic;
-	signal ResRdy_s		: std_logic;
-	signal Res_s			: std_logic_vector(31 downto 0);
+	signal sWghSet		: std_logic;
+	signal sTrig			: std_logic;
+	signal sTrigDly			: std_logic;
+	signal sResRdy		: std_logic;
+	signal sRes			: std_logic_vector(31 downto 0);
 	
 	-- Neuron
-	signal NrnTrig_s		: std_logic;
-	signal NrnResRdy_s	: std_logic;
-	signal Wgh1_s			: std_logic_vector(31 downto 0);
-	signal Wgh2_s			: std_logic_vector(31 downto 0);
-	signal Wgh3_s			: std_logic_vector(31 downto 0);
-	signal Wgh4_s			: std_logic_vector(31 downto 0);
-	signal Wgh5_s			: std_logic_vector(31 downto 0);
-	signal NeuronRes_s	: std_logic_vector(31 downto 0);
-	signal NrnResArry_s	: Array4x32_t;
-	signal WghArry_s		: Array20x32_t;
+	signal sNrnsTrig	: std_logic;
+	signal sNrnsResRdy: std_logic;
+	signal sWgh1			: std_logic_vector(31 downto 0);
+	signal sWgh2			: std_logic_vector(31 downto 0);
+	signal sWgh3			: std_logic_vector(31 downto 0);
+	signal sWgh4			: std_logic_vector(31 downto 0);
+	signal sWgh5			: std_logic_vector(31 downto 0);
+	signal sNeuronsRes: std_logic_vector(31 downto 0);
+	signal sNrnResArry: Array4x32_t;
+	signal sWghArry		: Array20x32_t;
 
 begin
     
@@ -129,18 +129,18 @@ begin
 	PORT MAP(
 		CLK   => CLK,
 		RST   => RST,
-		TRIG  => NrnTrig_s,
+		TRIG  => sNrnsTrig,
 		INPUT1=> INPUT1,
 		INPUT2=> INPUT2,
 		INPUT3=> INPUT3,
 		INPUT4=> INPUT4,
-		WGH1 	=> Wgh1_s,
-		WGH2 	=> Wgh2_s,
-		WGH3 	=> Wgh3_s,
-		WGH4 	=> Wgh4_s,
-		WGH5 	=> Wgh5_s,
-		RDY	=> NrnResRdy_s,
-		OUTPUT=> NeuronRes_s
+		WGH1 	=> sWgh1,
+		WGH2 	=> sWgh2,
+		WGH3 	=> sWgh3,
+		WGH4 	=> sWgh4,
+		WGH5 	=> sWgh5,
+		RDY	=> sNrnsResRdy,
+		OUTPUT=> sNeuronsRes
 	);
 
 	-- Main_p process
@@ -149,46 +149,44 @@ begin
 		variable Ctr_v : integer range 0 to NEURON_NUM-1;
 	begin
 
-		if(RST = High_c) then
-			
-			ResRdy_s		<= Low_c;
-			NrnTrig_s	<= Low_c;
-			Wgh1_s		<= (others=>'0');
-			Wgh2_s		<= (others=>'0');
-			Wgh3_s		<= (others=>'0');
-			Wgh4_s		<= (others=>'0');
-			Wgh5_s		<= (others=>'0');
-			NrnResArry_s<= (others=>(others=>'0'));
-			Ctr_v			:= 0;
-			
-		elsif( rising_edge( CLK )) then
-
-			ResRdy_s	<= Low_c;
-			NrnTrig_s<= Low_c;
-
-			-- Trig Multiplier
-			if(bTrig_s = Low_c AND Trig_s = High_c) then
-				NrnTrig_s<= High_c;
-				Ctr_v	 	:= 0;
-			end if;
-
-			if(NrnResRdy_s = High_c) then
-				NrnResArry_s(Ctr_v)(31 downto 0)	<= NeuronRes_s;
-				if(Ctr_v = NEURON_NUM-1) then
-					ResRdy_s	<= High_c;
-				else
-					NrnTrig_s<= High_c;
-					Ctr_v		:= Ctr_v + 1;
-				end if;
-			end if;
-				
-			Wgh1_s	<= WghArry_s(Ctr_v*5)(31 downto 0);
-			Wgh2_s	<= WghArry_s((Ctr_v*5)+1)(31 downto 0);
-			Wgh3_s	<= WghArry_s((Ctr_v*5)+2)(31 downto 0);
-			Wgh4_s	<= WghArry_s((Ctr_v*5)+3)(31 downto 0);
-			Wgh5_s	<= WghArry_s((Ctr_v*5)+4)(31 downto 0);
-
-		end if;
+    if(rising_edge(CLK)) then
+      if(RST = cHigh) then
+        sResRdy		<= cLow;
+        sNrnsTrig	  <= cLow;
+        sWgh1		  <= (others=>'0');
+        sWgh2		  <= (others=>'0');
+        sWgh3		  <= (others=>'0');
+        sWgh4		  <= (others=>'0');
+        sWgh5		  <= (others=>'0');
+        sNrnResArry<= (others=>(others=>'0'));
+        Ctr_v			  := 0;
+      else
+        sResRdy	<= cLow;
+        sNrnsTrig<= cLow;
+  
+        -- Trig Multiplier
+        if(sTrigDly = cLow AND sTrig = cHigh) then
+          sNrnsTrig<= cHigh;
+          Ctr_v	 	:= 0;
+        end if;
+  
+        if(sNrnsResRdy = cHigh) then
+          sNrnResArry(Ctr_v)(31 downto 0)	<= sNeuronsRes;
+          if(Ctr_v = NEURON_NUM-1) then
+            sResRdy	<= cHigh;
+          else
+            sNrnsTrig<= cHigh;
+            Ctr_v		:= Ctr_v + 1;
+          end if;
+        end if;
+          
+        sWgh1	<= sWghArry(Ctr_v*5)(31 downto 0);
+        sWgh2	<= sWghArry((Ctr_v*5)+1)(31 downto 0);
+        sWgh3	<= sWghArry((Ctr_v*5)+2)(31 downto 0);
+        sWgh4	<= sWghArry((Ctr_v*5)+3)(31 downto 0);
+        sWgh5	<= sWghArry((Ctr_v*5)+4)(31 downto 0);
+      end if;
+    end if;	
 
 	end process;
 
@@ -197,36 +195,34 @@ begin
 	SetWgh_p : process( CLK, RST )
 		variable WghNum_v : integer range 0 to 20;
 	begin
-
-		if(RST = High_c) then
-			WghArry_s<= (others=>(others=>'0'));
-			WghNum_v	:= 0;
-		elsif( rising_edge( CLK )) then
-			
-			if(WghSet_s = High_c) then
-				WghNum_v	:= conv_integer(WGH_NUM);
-				WghArry_s(WghNum_v)(31 downto 0)	<= WGH;
-			end if;
-			
-		end if;
-
+    if(rising_edge(CLK)) then
+      if(RST = cHigh) then
+        sWghArry <= (others=>(others=>'0'));
+        WghNum_v := 0;
+      else
+        if(sWghSet = cHigh) then
+          WghNum_v	:= conv_integer(WGH_NUM);
+          sWghArry(WghNum_v)(31 downto 0)	<= WGH;
+        end if;
+      end if;
+    end if;
 	end process;
 
 	-- Buf_p process
 	--
 	Buf_p : process( CLK, RST )
 	begin
-
-		if(RST = High_c) then
-			WghSet_s	<= Low_c;
-			Trig_s 	<= Low_c;
-			bTrig_s 	<= Low_c;
-		elsif( rising_edge( CLK )) then
-			WghSet_s	<= WGH_SET;
-			Trig_s 	<= TRIG;
-			bTrig_s 	<= Trig_s;
-		end if;
-
+    if(rising_edge(CLK)) then
+      if(RST = cHigh) then
+        sWghSet <= cLow;
+        sTrig 	<= cLow;
+        sTrigDly<= cLow;
+      else
+        sWghSet <= WGH_SET;
+        sTrig 	<= TRIG;
+        sTrigDly<= sTrig;
+      end if;
+    end if;
 	end process;
 
 	--
@@ -238,11 +234,11 @@ begin
 
 	-- Outputs
 	--
-	RDY		<= ResRdy_s;
-	OUTPUT1	<= NrnResArry_s(0)(31 downto 0);
-	OUTPUT2	<= NrnResArry_s(1)(31 downto 0);
-	OUTPUT3	<= NrnResArry_s(2)(31 downto 0);
-	OUTPUT4	<= NrnResArry_s(3)(31 downto 0);
+	RDY		<= sResRdy;
+	OUTPUT1	<= sNrnResArry(0)(31 downto 0);
+	OUTPUT2	<= sNrnResArry(1)(31 downto 0);
+	OUTPUT3	<= sNrnResArry(2)(31 downto 0);
+	OUTPUT4	<= sNrnResArry(3)(31 downto 0);
 	
 	-- InOuts
 	--

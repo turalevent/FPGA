@@ -68,30 +68,40 @@ architecture YTU of Neuron is
 		);
 	END COMPONENT;
 
-	-- Floating Point Adder
-	--
-	COMPONENT fpAdder
-		PORT (
-			clk				: IN  std_logic;
-			operation_nd	: IN  std_logic;
-			a					: IN  std_logic_VECTOR(31 downto 0);
-			b					: IN  std_logic_VECTOR(31 downto 0);
-			rdy				: OUT std_logic;
-			result			: OUT std_logic_VECTOR(31 downto 0)
-		);
+	-- f32Adder
+	-- 32bit floating point adder/subtracter
+	COMPONENT f32_adder
+    GENERIC(
+      SIZE : integer := 32
+    );
+    PORT(
+      CLK	  : in  std_logic;
+      RST	  : in  std_logic;
+      -- SAMPLES
+      A     : in  std_logic_vector(SIZE-1 downto 0);
+      B     : in  std_logic_vector(SIZE-1 downto 0);
+      EN    : in  std_logic;
+      -- Ouputs
+      NAN   : out std_logic;
+      INF   : out std_logic;
+      READY : out std_logic;
+      RES	  : out std_logic_vector(SIZE-1 downto 0)
+    );
 	END COMPONENT;
 
 	-- Floating Point Multiplier
 	--
-	COMPONENT fpMultp
-		PORT (
-			clk				: IN  std_logic;
-			operation_nd	: IN  std_logic;
-			a					: IN  std_logic_VECTOR(31 downto 0);
-			b					: IN  std_logic_VECTOR(31 downto 0);
-			rdy				: OUT std_logic;
-			result			: OUT std_logic_VECTOR(31 downto 0)
-		);
+	COMPONENT f32_multiplier
+	PORT(
+		CLK,RST	: in  std_logic;
+		A   		: in  std_logic_vector(31 downto 0);
+		B   		: in  std_logic_vector(31 downto 0);
+    EN      : in  std_logic;
+		NAN     : out std_logic;
+		INF     : out std_logic;
+    READY   : out std_logic;
+		RES		  : out std_logic_vector(31 downto 0)
+	);
 	END COMPONENT;
     
 	--
@@ -164,27 +174,33 @@ begin
 	);
 
 	-- Adder_cmp component
-	-- 
-	Add_cmp : fpAdder 
+	-- Floating Point Adder
+	Adder_cmp: f32_adder
 	PORT MAP(
-		clk				=> CLK,
-		operation_nd	=> AddOND_s,
-		a					=>	AddIn1_s,
-		b					=>	AddIn2_s,
-		rdy				=> AddDone_s,
-		result			=>	AddRes_s
+		CLK   => CLK,
+		RST   => RST,
+		A	    => AddIn1_s,
+		B	    => AddIn2_s,
+		EN    => AddOND_s,
+		NAN   => open,
+		INF   => open,
+		READY => AddDone_s,
+		RES   => AddRes_s
 	);
 
 	-- Mult_cmp component
 	-- 
-	Mult_cmp : fpMultp 
+	Mult_cmp : f32_multiplier 
 	PORT MAP(
-		clk				=> CLK,
-		operation_nd	=> MultOND_s,
-		a					=>	MultIn1_s,
-		b					=>	MultIn2_s,
-		rdy				=> MultDone_s,
-		result			=>	MultRes_s
+		CLK   => CLK,
+		RST   => RST,
+		A	    => MultIn1_s,
+		B	    => MultIn2_s,
+		EN    => MultOND_s,
+		NAN   => open,
+		INF   => open,
+		READY => MultDone_s,
+		RES   => MultRes_s
 	);
 
 

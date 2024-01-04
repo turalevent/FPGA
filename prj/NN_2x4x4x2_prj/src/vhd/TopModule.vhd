@@ -1,18 +1,20 @@
 ----------------------------------------------------------------------------------
--- Company			: 
--- Engineer			: Levent TURA
+-- Company: LvnT
+-- Engineer: Levent TURA 
 -- 
--- Create Date		: 07.05.2015
--- Design Name		: 
--- Module Name		: TopModule - YTU
--- Project Name	: Neural Network
--- Target Devices	: Virtex-4
--- Tool Versions	: 14.2
--- Description		: 
+-- Create Date: 04.01.2024
+-- Design Name: 
+-- Module Name: TopModule - LvnT
+-- Project Name: NN2x4x4x2_prj
+-- Target Devices: -
+-- Tool Versions: -
+-- Description: Neural Network whic has 2 Input X 4X4 Hidden x 2 Output Layers. 
+--              It gets all sigmoids' Activation constants through UART and gives the 
+--              computation result through UART. All floating points are in IEEE754 Single precision (f32).
 -- 
--- Dependencies	: 
+-- Dependencies: 
 -- 
--- Revision			:
+-- Revision:
 -- Revision 0.01 - File Created
 -- Additional Comments:
 -- 
@@ -212,12 +214,12 @@ begin
 	-- |______________|______________|______|
 	--	 1-byte         1-byte         4-byte             
 	--
-	--  ______________ _____________________________________
-	-- |              |              |      		  |		  |
-	-- |              |              |      		  |		  |
-	-- | SET_WGHT_CMD | LAYER_NUMBER | WGHT_NUMBER |  WGHT  |
-	-- |              |              |      		  |		  |
-	-- |______________|______________|_____________|________|
+	--  ______________ ______________________________________
+	-- |              |              |      		   |		     |
+	-- |              |              |      		   |		     |
+	-- | SET_WGHT_CMD | LAYER_NUMBER | WGHT_NUMBER |  WGHT   |
+	-- |              |              |      		   |		     |
+	-- |______________|______________|_____________|_________|
 	--	 1-byte         1-byte         1-byte        4-byte             
 
 	-- Main_p process

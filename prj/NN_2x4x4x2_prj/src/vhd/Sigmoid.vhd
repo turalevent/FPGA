@@ -50,28 +50,41 @@ architecture YTU of Sigmoid is
 	
 	-- Floating Point Adder
 	--
-	COMPONENT fpAdder
-		PORT (
-			clk				: IN  std_logic;
-			operation_nd	: IN  std_logic;
-			a					: IN  std_logic_vector(31 downto 0);
-			b					: IN  std_logic_vector(31 downto 0);
-			rdy				: OUT std_logic;
-			result			: OUT std_logic_vector(31 downto 0)
-		);
+	-- f32Adder
+	-- 32bit floating point adder/subtracter
+	COMPONENT f32_adder
+    GENERIC(
+      SIZE : integer := 32
+    );
+    PORT(
+      CLK	  : in  std_logic;
+      RST	  : in  std_logic;
+      -- SAMPLES
+      A     : in  std_logic_vector(SIZE-1 downto 0);
+      B     : in  std_logic_vector(SIZE-1 downto 0);
+      EN    : in  std_logic;
+      -- Ouputs
+      NAN   : out std_logic;
+      INF   : out std_logic;
+      READY : out std_logic;
+      RES	  : out std_logic_vector(SIZE-1 downto 0)
+    );
 	END COMPONENT;
 
 	-- Floating Point Divider
 	--
-	COMPONENT fpDiv
-		PORT (
-			clk				: IN  std_logic;
-			operation_nd	: IN  std_logic;
-			a					: IN  std_logic_vector(31 downto 0);
-			b					: IN  std_logic_vector(31 downto 0);
-			rdy				: OUT std_logic;
-			result			: OUT std_logic_vector(31 downto 0)
-		);
+	COMPONENT f32_divider
+	PORT(
+		CLK	  : in  std_logic;
+		RST	  : in  std_logic;
+		A		  : in  std_logic_vector(31 downto 0);
+		B		  : in  std_logic_vector(31 downto 0);
+		EN    : in  std_logic;
+		NAN   : out std_logic;
+		INF   : out std_logic;
+		READY : out std_logic;
+		RES	  : out std_logic_vector(31 downto 0)
+	);
 	END COMPONENT;
     
 	--
@@ -132,26 +145,32 @@ begin
 
 	-- Adder_cmp component
 	-- Floating Point Adder
-	Adder_cmp : fpAdder 
+	Adder_cmp: f32_adder
 	PORT MAP(
-		clk				=> CLK,
-		operation_nd	=> AddOND_s,
-		a					=>	AddIn1_s,
-		b					=>	AddIn2_s,
-		rdy				=> AddDone_s,
-		result			=>	AddRes_s
+		CLK   => CLK,
+		RST   => RST,
+		A	    => AddIn1_s,
+		B	    => AddIn2_s,
+		EN    => AddOND_s,
+		NAN   => open,
+		INF   => open,
+		READY => AddDone_s,
+		RES   => AddRes_s
 	);
 
 	-- Divider_cmp component
 	-- Floating Point Divider
-	Divider_cmp : fpDiv 
+	Divider_cmp : f32_divider 
 	PORT MAP(
-		clk				=> CLK,
-		operation_nd	=> DivOND_s,
-		a					=>	DivIn1_s,
-		b					=>	DivIn2_s,
-		rdy				=> DivDone_s,
-		result			=>	DivRes_s
+		CLK	  => CLK,
+		RST	  => RST,
+		A		  =>	DivIn1_s,
+		B		  =>	DivIn2_s,
+		EN    => DivOND_s,
+		NAN   => open,
+		INF   => open,
+		READY => DivDone_s,
+		RES	  =>	DivRes_s
 	);
 
 	-- Sigmoid calculation

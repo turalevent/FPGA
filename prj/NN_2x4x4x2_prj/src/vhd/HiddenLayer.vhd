@@ -1,18 +1,19 @@
 ----------------------------------------------------------------------------------
--- Company			: 
--- Engineer			: Levent TURA
+-- Company: LvnT
+-- Engineer: Levent TURA 
 -- 
--- Create Date		: 07.05.2015
--- Design Name		: 
--- Module Name		: HiddenLayer - YTU
--- Project Name	: HiddenLayer
--- Target Devices	: Virtex-4
--- Tool Versions	: 14.2
--- Description		: 
+-- Create Date: 04.01.2024
+-- Design Name: 
+-- Module Name: HiddenLayer - LvnT
+-- Project Name: NN2x4x4x2_prj
+-- Target Devices: -
+-- Tool Versions: -
+-- Description: Neural Network Hidden Layer which has 4 Neurons. 
+-- Note : All floating points are in IEEE754 Single precision (f32).
 -- 
--- Dependencies	: 
+-- Dependencies: 
 -- 
--- Revision			:
+-- Revision:
 -- Revision 0.01 - File Created
 -- Additional Comments:
 -- 
@@ -47,7 +48,7 @@ entity HiddenLayer is
 	);
 end HiddenLayer;
 
-architecture YTU of HiddenLayer is
+architecture LvnT of HiddenLayer is
 
 	--
 	-- Components
@@ -249,4 +250,4 @@ begin
 	-- Internals
 	--
 
-end YTU;
+end LvnT;

@@ -1,18 +1,20 @@
 ----------------------------------------------------------------------------------
--- Company			: 
--- Engineer			: Levent TURA
+-- Company: LvnT
+-- Engineer: Levent TURA 
 -- 
--- Create Date		: 07.05.2015
--- Design Name		: 
--- Module Name		: NeuralNetwork - YTU
--- Project Name	: Neural Network
--- Target Devices	: Virtex-4
--- Tool Versions	: 14.2
--- Description		: 
+-- Create Date: 04.01.2024
+-- Design Name: 
+-- Module Name: TopModule - LvnT
+-- Project Name: NN2x4x4x2_prj
+-- Target Devices: -
+-- Tool Versions: -
+-- Description: Neural Network which has 2 Input X 4X4 Hidden x 2 Output Layers. 
+--              It takes Inputs Weights for each Neuron and computes the resultand Output. 
+-- Note : All floating points are in IEEE754 Single precision (f32).
 -- 
--- Dependencies	: 
+-- Dependencies: 
 -- 
--- Revision			:
+-- Revision:
 -- Revision 0.01 - File Created
 -- Additional Comments:
 -- 
@@ -39,7 +41,7 @@ entity NeuralNetwork is
 	);
 end NeuralNetwork;
 
-architecture YTU of NeuralNetwork is
+architecture LvnT of NeuralNetwork is
 
 	--
 	-- Components
@@ -238,5 +240,5 @@ begin
 	OutLyrWghSet_s		<= WGH_SET	when	WGH_LYR_NUM = "10" else
 								'0';
 
-end YTU;
+end LvnT;
 

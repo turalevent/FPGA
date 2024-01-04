@@ -1,18 +1,19 @@
 ----------------------------------------------------------------------------------
--- Company			: 
--- Engineer			: Levent TURA
+-- Company: LvnT
+-- Engineer: Levent TURA 
 -- 
--- Create Date		: 07.05.2015
--- Design Name		: 
--- Module Name		: Sigmoid - YTU
--- Project Name	: Neuron
--- Target Devices	: Virtex-4
--- Tool Versions	: 14.2
--- Description		: 
+-- Create Date: 04.01.2024
+-- Design Name: 
+-- Module Name: Sigmoid - LvnT
+-- Project Name: NN2x4x4x2_prj
+-- Target Devices: -
+-- Tool Versions: -
+-- Description: IT computes 1 Neuron's Sigmoid result regarding its Input and Weight. 
+-- Note : All floating points are in IEEE754 Single precision (f32).
 -- 
--- Dependencies	: 
+-- Dependencies: 
 -- 
--- Revision			:
+-- Revision:
 -- Revision 0.01 - File Created
 -- Additional Comments:
 -- 
@@ -41,7 +42,7 @@ entity Sigmoid is
 	);
 end Sigmoid;
 
-architecture YTU of Sigmoid is
+architecture LvnT of Sigmoid is
 
 
 	--
@@ -321,4 +322,4 @@ begin
     --
 
 
-end YTU;
+end LvnT;

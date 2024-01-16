@@ -45,7 +45,7 @@ entity Neuron is
 		WGH3	: in  std_logic_vector(31 downto 0);  
 		WGH4	: in  std_logic_vector(31 downto 0);  
 		WGH5	: in  std_logic_vector(31 downto 0);  
-		RDY	: out std_logic;
+		RDY	  : out std_logic;
 		OUTPUT: out std_logic_vector(31 downto 0)  
 	);
 end Neuron;
@@ -64,7 +64,7 @@ architecture LvnT of Neuron is
 			RST   : in  std_logic;
 			TRIG  : in  std_logic;
 			INPUT : in  std_logic_vector(31 downto 0);  
-			RDY	: out std_logic;
+			RDY	  : out std_logic;
 			OUTPUT: out std_logic_vector(31 downto 0)  
 		);
 	END COMPONENT;
@@ -129,12 +129,12 @@ architecture LvnT of Neuron is
    
 	-- General Signals
 	signal sTrig			: std_logic;
-	signal sTrigDly			: std_logic;
+	signal sTrigDly		: std_logic;
 	signal sResRdy		: std_logic;
 	signal sNeuronRes	: std_logic_vector(31 downto 0);
 	
 	-- Sigmoid
-	signal sCalcSigm		: std_logic;
+	signal sCalcSigm	: std_logic;
 
 	-- Floating Point Adder-1 signals
 	signal sAddOND		: std_logic;
@@ -283,10 +283,10 @@ begin
     if(rising_edge(CLK)) then
       if(RST = cHigh) then
         sTrig 	<= cLow;
-        sTrigDly 	<= cLow;
+        sTrigDly<= cLow;
       else
         sTrig 	<= TRIG;
-        sTrigDly 	<= sTrig;
+        sTrigDly<= sTrig;
       end if;
     end if;
 	end process;

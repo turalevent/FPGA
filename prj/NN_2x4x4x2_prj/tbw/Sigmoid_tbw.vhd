@@ -96,6 +96,9 @@ BEGIN
           OUTPUT => OUTPUT
         );
 
+	RST <= '1', '0' after CLK_period*2;
+	TRIG<= '0', '1' after CLK_period*5, '0' after CLK_period*6;
+
    -- Clock process definitions
    CLK_process :process
    begin
@@ -109,14 +112,8 @@ BEGIN
    -- Stimulus process
    stim_proc: process
    begin		
-      -- hold reset state for 100 ns.
-      wait for 100 ns;	
 		
-		TRIG	<= '1';
-      wait for CLK_period*10;
-		TRIG	<= '0';
-		
-      wait for 2 us;	
+      wait for 5 us;	
 		
 		assert false
 		report "Sim Finished"

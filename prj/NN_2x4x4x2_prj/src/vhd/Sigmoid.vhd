@@ -37,7 +37,7 @@ entity Sigmoid is
 		RST   : in  std_logic;
 		TRIG  : in  std_logic;
 		INPUT : in  std_logic_vector(31 downto 0);  
-		RDY	: out std_logic;
+		RDY	  : out std_logic;
 		OUTPUT: out std_logic_vector(31 downto 0)  
 	);
 end Sigmoid;
@@ -182,9 +182,9 @@ begin
 	--
 	-- Step-1 : Calc. Abs(In)
 	-- Step-2 : Calc. 1 + Abs(In)	-> ADD1_ST
-	-- Step-3 : Calc. /				->	DIV1_ST
-	-- Step-4 : Calc. + 1 			-> ADD2_ST
-	-- Step-5 : Calc. / 2 			-> DIV2_ST
+	-- Step-3 : Calc. /				    -> DIV1_ST
+	-- Step-4 : Calc. + 1 			  -> ADD2_ST
+	-- Step-5 : Calc. / 2 			  -> DIV2_ST
     
 	-- Main_p process
 	--
@@ -287,13 +287,13 @@ begin
     if(rising_edge(CLK)) then
       if(RST = cHigh) then
         sTrig 	<= cLow;
-        sTrigDly 	<= cLow;
-        sIn		<= (others=>'0');
+        sTrigDly<= cLow;
+        sIn		  <= (others=>'0');
         sAbsIn	<= (others=>'0');
       else
         sTrig 	<= TRIG;
-        sTrigDly 	<= sTrig;
-        sIn		<= INPUT;
+        sTrigDly<= sTrig;
+        sIn		  <= INPUT;
         sAbsIn	<= '0' & INPUT(30 downto 0);
       end if;
     end if;

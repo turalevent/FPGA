@@ -134,17 +134,21 @@ architecture LvnT of Neuron is
 	signal sNeuronRes	: std_logic_vector(31 downto 0);
 	
 	-- Sigmoid
-	signal sCalcSigm	: std_logic;
+	signal sSigmTrig	: std_logic;
 
 	-- Floating Point Adder-1 signals
-	signal sAddOND		: std_logic;
+	signal sAddTrig		: std_logic;
+	signal sAddRdy	  : std_logic;
+	signal sAddRdyDly : std_logic;
 	signal sAddDone		: std_logic;
 	signal sAddIn1		: std_logic_vector(31 downto 0);
 	signal sAddIn2		: std_logic_vector(31 downto 0);
 	signal sAddRes		: std_logic_vector(31 downto 0);
 
 	-- Floating Point Multiplier signals
-	signal sMultOND		: std_logic;
+	signal sMultTrig	: std_logic;
+	signal sMultRdy	  : std_logic;
+	signal sMultRdyDly: std_logic;
 	signal sMultDone	: std_logic;
 	signal sMultIn1		: std_logic_vector(31 downto 0);
 	signal sMultIn2		: std_logic_vector(31 downto 0);
@@ -168,7 +172,7 @@ begin
 	PORT MAP(
 		CLK   => CLK,
 		RST   => RST,
-		TRIG  => sCalcSigm,
+		TRIG  => sSigmTrig,
 		INPUT => sAddRes,
 		RDY	  => sResRdy,
 		OUTPUT=> sNeuronRes
@@ -182,10 +186,10 @@ begin
 		RST   => RST,
 		A	    => sAddIn1,
 		B	    => sAddIn2,
-		EN    => sAddOND,
+		EN    => sAddTrig,
 		NAN   => open,
 		INF   => open,
-		READY => sAddDone,
+		READY => sAddRdy,
 		RES   => sAddRes
 	);
 
@@ -197,10 +201,10 @@ begin
 		RST   => RST,
 		A	    => sMultIn1,
 		B	    => sMultIn2,
-		EN    => sMultOND,
+		EN    => sMultTrig,
 		NAN   => open,
 		INF   => open,
-		READY => sMultDone,
+		READY => sMultRdy,
 		RES   => sMultRes
 	);
 
@@ -212,24 +216,24 @@ begin
 	begin
     if(rising_edge(CLK)) then
       if(RST = cHigh) then
-        sAddOND 	<= cLow;
-        sCalcSigm	<= cLow;
+        sAddTrig 	<= cLow;
+        sSigmTrig	<= cLow;
         sAddIn1		<= (others=>'0');
         sAddIn2		<= (others=>'0');
         Ctr_v			:= 0;
       else
-        sAddOND	 	<= cLow;
-        sCalcSigm	<= cLow;		
+        sAddTrig	<= cLow;
+        sSigmTrig	<= cLow;		
         -- Trig Adder-1 & Adder-2
         if((sMultCnt = 3) AND (sMultDone = cHigh)) then
           sAddIn1	<= sMultResArray(Ctr_v)(31 downto 0);
           sAddIn2	<= sMultResArray(Ctr_v+1)(31 downto 0);
-          sAddOND	<= cHigh;
+          sAddTrig<= cHigh;
           Ctr_v		:= Ctr_v + 2;				
         end if;
         if(sAddDone = cHigh) then				
           if(Ctr_v = 5) then
-            sCalcSigm<= cHigh;		
+            sSigmTrig<= cHigh;		
             Ctr_v		 := 0;
           else
             if(Ctr_v = 4) then
@@ -238,7 +242,7 @@ begin
               sAddIn1	<= sMultResArray(Ctr_v)(31 downto 0);
             end if;
             sAddIn2	<= sAddRes;				
-            sAddOND	<= cHigh;
+            sAddTrig<= cHigh;
             Ctr_v		:= Ctr_v + 1;				
           end if;
         end if;
@@ -252,24 +256,24 @@ begin
 	begin
     if(rising_edge(CLK)) then
       if(RST = cHigh) then
-        sMultCnt 		<= 0;
-        sMultOND 		<= cLow;
-        sMultResArray	<= (others=>(others=>'0'));
+        sMultCnt 		 <= 0;
+        sMultTrig 	 <= cLow;
+        sMultResArray<= (others=>(others=>'0'));
       else
-        sMultOND <= cLow;
+        sMultTrig <= cLow;
         -- Trig Multiplier
         if(sTrigDly = cLow AND sTrig = cHigh) then
-          sMultCnt 		<= 0;
-          sMultOND 		<= cHigh;
-          sMultResArray	<= (others=>(others=>'0'));
+          sMultCnt 		 <= 0;
+          sMultTrig 	 <= cHigh;
+          sMultResArray<= (others=>(others=>'0'));
         end if;
         if(sMultDone = cHigh) then
           sMultResArray(sMultCnt)(31 downto 0)	<= sMultRes;
           if(sMultCnt = cMaxMultCnt) then
-            sMultCnt<= 0;
+            sMultCnt  <= 0;
           else
-            sMultCnt<= sMultCnt + 1;
-            sMultOND<= cHigh;
+            sMultCnt  <= sMultCnt + 1;
+            sMultTrig <= cHigh;
           end if;
         end if;
       end if;
@@ -282,11 +286,15 @@ begin
 	begin
     if(rising_edge(CLK)) then
       if(RST = cHigh) then
-        sTrig 	<= cLow;
-        sTrigDly<= cLow;
+        sTrig 	    <= cLow;
+        sTrigDly    <= cLow;
+        sMultRdyDly <= cLow;
+        sAddRdyDly  <= cLow;
       else
-        sTrig 	<= TRIG;
-        sTrigDly<= sTrig;
+        sTrig 	    <= TRIG;
+        sTrigDly    <= sTrig;
+        sMultRdyDly <= sMultRdy;
+        sAddRdyDly  <= sAddRdy;
       end if;
     end if;
 	end process;
@@ -308,6 +316,9 @@ begin
 
 	-- Internals
 	--
+	sMultDone<= sMultRdy AND (NOT sMultRdyDly);
+	sAddDone <= sAddRdy AND (NOT sAddRdyDly);
+	
 	sMultIn1<= INPUT1	when	sMultCnt = 0 else
 					   INPUT2	when	sMultCnt = 1 else
 					   INPUT3	when	sMultCnt = 2 else

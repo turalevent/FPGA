@@ -33,14 +33,14 @@ entity HiddenLayer is
 		CLK   	: in  std_logic;
 		RST   	: in  std_logic;
 		TRIG  	: in  std_logic;
-		WGH_SET 	: in  std_logic;
+		WGH_SET : in  std_logic;
 		WGH_NUM	: in  std_logic_vector(7 downto 0);  
-		WGH		: in  std_logic_vector(31 downto 0);  
+		WGH		  : in  std_logic_vector(31 downto 0);  
 		INPUT1	: in  std_logic_vector(31 downto 0);  
 		INPUT2	: in  std_logic_vector(31 downto 0);  
 		INPUT3	: in  std_logic_vector(31 downto 0);  
 		INPUT4	: in  std_logic_vector(31 downto 0);  
-		RDY		: out std_logic;
+		RDY		  : out std_logic;
 		OUTPUT1	: out std_logic_vector(31 downto 0);  
 		OUTPUT2	: out std_logic_vector(31 downto 0); 
 		OUTPUT3	: out std_logic_vector(31 downto 0);  
@@ -70,7 +70,7 @@ architecture LvnT of HiddenLayer is
 			WGH3	: in  std_logic_vector(31 downto 0);  
 			WGH4	: in  std_logic_vector(31 downto 0);  
 			WGH5	: in  std_logic_vector(31 downto 0);  
-			RDY	: out std_logic;
+			RDY	  : out std_logic;
 			OUTPUT: out std_logic_vector(31 downto 0)  
 		);
 	END COMPONENT;
@@ -97,19 +97,22 @@ architecture LvnT of HiddenLayer is
 	-- General Signals
 	signal sWghSet		: std_logic;
 	signal sTrig			: std_logic;
-	signal sTrigDly			: std_logic;
+	signal sTrigDly		: std_logic;
+	signal sEnRise		: std_logic;
 	signal sResRdy		: std_logic;
-	signal sRes			: std_logic_vector(31 downto 0);
+	signal sRes			  : std_logic_vector(31 downto 0);
 	
 	-- Neuron
-	signal sNrnsTrig	: std_logic;
-	signal sNrnsResRdy: std_logic;
+	signal sNrnTrig	  : std_logic;
+	signal sNrnDone   : std_logic;
+	signal sNrnRdy    : std_logic;
+	signal sNrnRdyDly : std_logic;
 	signal sWgh1			: std_logic_vector(31 downto 0);
 	signal sWgh2			: std_logic_vector(31 downto 0);
 	signal sWgh3			: std_logic_vector(31 downto 0);
 	signal sWgh4			: std_logic_vector(31 downto 0);
 	signal sWgh5			: std_logic_vector(31 downto 0);
-	signal sNeuronsRes: std_logic_vector(31 downto 0);
+	signal sNeuronRes: std_logic_vector(31 downto 0);
 	signal sNrnResArry: Array4x32_t;
 	signal sWghArry		: Array20x32_t;
 
@@ -129,7 +132,7 @@ begin
 	PORT MAP(
 		CLK   => CLK,
 		RST   => RST,
-		TRIG  => sNrnsTrig,
+		TRIG  => sNrnTrig,
 		INPUT1=> INPUT1,
 		INPUT2=> INPUT2,
 		INPUT3=> INPUT3,
@@ -139,8 +142,8 @@ begin
 		WGH3 	=> sWgh3,
 		WGH4 	=> sWgh4,
 		WGH5 	=> sWgh5,
-		RDY	=> sNrnsResRdy,
-		OUTPUT=> sNeuronsRes
+		RDY	  => sNrnRdy,
+		OUTPUT=> sNeuronRes
 	);
 
 	-- Main_p process
@@ -151,31 +154,31 @@ begin
 
     if(rising_edge(CLK)) then
       if(RST = cHigh) then
-        sResRdy		<= cLow;
-        sNrnsTrig	  <= cLow;
-        sWgh1		  <= (others=>'0');
-        sWgh2		  <= (others=>'0');
-        sWgh3		  <= (others=>'0');
-        sWgh4		  <= (others=>'0');
-        sWgh5		  <= (others=>'0');
-        sNrnResArry<= (others=>(others=>'0'));
+        sResRdy		  <= cLow;
+        sNrnTrig	  <= cLow;
+        sWgh1		    <= (others=>'0');
+        sWgh2		    <= (others=>'0');
+        sWgh3		    <= (others=>'0');
+        sWgh4		    <= (others=>'0');
+        sWgh5		    <= (others=>'0');
+        sNrnResArry <= (others=>(others=>'0'));
         Ctr_v			  := 0;
       else
         sResRdy	<= cLow;
-        sNrnsTrig<= cLow;
+        sNrnTrig<= cLow;
   
         -- Trig Multiplier
-        if(sTrigDly = cLow AND sTrig = cHigh) then
-          sNrnsTrig<= cHigh;
+        if(sEnRise = cHigh) then
+          sNrnTrig<= cHigh;
           Ctr_v	 	:= 0;
         end if;
   
-        if(sNrnsResRdy = cHigh) then
-          sNrnResArry(Ctr_v)(31 downto 0)	<= sNeuronsRes;
+        if(sNrnDone = cHigh) then
+          sNrnResArry(Ctr_v)(31 downto 0)	<= sNeuronRes;
           if(Ctr_v = NEURON_NUM-1) then
             sResRdy	<= cHigh;
           else
-            sNrnsTrig<= cHigh;
+            sNrnTrig<= cHigh;
             Ctr_v		:= Ctr_v + 1;
           end if;
         end if;
@@ -214,13 +217,15 @@ begin
 	begin
     if(rising_edge(CLK)) then
       if(RST = cHigh) then
-        sWghSet <= cLow;
-        sTrig 	<= cLow;
-        sTrigDly<= cLow;
+        sWghSet   <= cLow;
+        sTrig 	  <= cLow;
+        sTrigDly  <= cLow;
+        sNrnRdyDly<= cLow;
       else
-        sWghSet <= WGH_SET;
-        sTrig 	<= TRIG;
-        sTrigDly<= sTrig;
+        sWghSet   <= WGH_SET;
+        sTrig 	  <= TRIG;
+        sTrigDly  <= sTrig;
+        sNrnRdyDly<= sNrnRdy;
       end if;
     end if;
 	end process;
@@ -245,5 +250,7 @@ begin
 
 	-- Internals
 	--
+	sEnRise  <= sTrig AND (NOT sTrigDly);
+	sNrnDone <= sNrnRdy AND (NOT sNrnRdyDly);
 
 end LvnT;

@@ -102,6 +102,7 @@ architecture LvnT of Sigmoid is
 	--
 
 	type SigFSM_t is(
+	  IDLE_ST,
 		ADD1_ST,
 		DIV1_ST,
 		ADD2_ST,
@@ -118,25 +119,31 @@ architecture LvnT of Sigmoid is
 	signal sMainSt			: SigFSM_t;
 	
 	-- General Signals
-	signal sTrig		: std_logic;
-	signal sTrigDly	: std_logic;
-	signal sIn			: std_logic_vector(31 downto 0);
-	signal sAbsIn		: std_logic_vector(31 downto 0);
-	signal sResRdy	: std_logic;
+	signal sTrig		  : std_logic;
+	signal sTrigDly	  : std_logic;
+	signal sEnRise    : std_logic;
+	signal sIn			  : std_logic_vector(31 downto 0);
+	signal sAbsIn		  : std_logic_vector(31 downto 0);
+	signal sResRdy	  : std_logic;
+	signal sSigRes	  : std_logic_vector(31 downto 0);
 
 	-- Floating Point Adder signals
-	signal sAddOND	: std_logic;
-	signal sAddDone	: std_logic;
-	signal sAddIn1	: std_logic_vector(31 downto 0);
-	signal sAddIn2	: std_logic_vector(31 downto 0);
-	signal sAddRes	: std_logic_vector(31 downto 0);
+	signal sAddTrig	  : std_logic;
+	signal sAddDone	  : std_logic;
+	signal sAddRdy	  : std_logic;
+	signal sAddRdyDly	: std_logic;
+	signal sAddIn1	  : std_logic_vector(31 downto 0);
+	signal sAddIn2	  : std_logic_vector(31 downto 0);
+	signal sAddRes	  : std_logic_vector(31 downto 0);
 
 	-- Floating Point Divider signals
-	signal sDivOND	: std_logic;
-	signal sDivDone	: std_logic;
-	signal sDivIn1	: std_logic_vector(31 downto 0);
-	signal sDivIn2	: std_logic_vector(31 downto 0);
-	signal sDivRes	: std_logic_vector(31 downto 0);
+	signal sDivTrig	  : std_logic;
+	signal sDivDone	  : std_logic;
+	signal sDivRdy	  : std_logic;
+	signal sDivRdyDly	: std_logic;
+	signal sDivIn1	  : std_logic_vector(31 downto 0);
+	signal sDivIn2	  : std_logic_vector(31 downto 0);
+	signal sDivRes	  : std_logic_vector(31 downto 0);
 		
 begin
     
@@ -152,10 +159,10 @@ begin
 		RST   => RST,
 		A	    => sAddIn1,
 		B	    => sAddIn2,
-		EN    => sAddOND,
+		EN    => sAddTrig,
 		NAN   => open,
 		INF   => open,
-		READY => sAddDone,
+		READY => sAddRdy,
 		RES   => sAddRes
 	);
 
@@ -165,13 +172,13 @@ begin
 	PORT MAP(
 		CLK	  => CLK,
 		RST	  => RST,
-		A		  =>	sDivIn1,
-		B		  =>	sDivIn2,
-		EN    => sDivOND,
+		A		  => sDivIn1,
+		B		  => sDivIn2,
+		EN    => sDivTrig,
 		NAN   => open,
 		INF   => open,
-		READY => sDivDone,
-		RES	  =>	sDivRes
+		READY => sDivRdy,
+		RES	  => sDivRes
 	);
 
 	-- Sigmoid calculation
@@ -189,92 +196,90 @@ begin
 	-- Main_p process
 	--
 	Main_p : process( CLK, RST )
-		variable CalcRun_v : std_logic;
 	begin
     if(rising_edge(CLK)) then
       if(RST = cHigh) then
         sResRdy	<= cLow;
-        sAddOND	<= cLow;
-        sDivOND	<= cLow;
-        sMainSt	<= ADD1_ST;
-        sMainSt	<= ADD1_ST;
+        sAddTrig<= cLow;
+        sDivTrig<= cLow;
+        sMainSt	<= IDLE_ST;
         sAddIn1	<= (others=>'0');
         sAddIn2	<= (others=>'0');
-        CalcRun_v:= cLow;
+        sSigRes	<= (others=>'0');
       else
-        sResRdy	<= cLow;
-        sAddOND	<= cLow;
-        sDivOND	<= cLow;
-        
-        if(sTrigDly = cLow AND sTrig = cHigh) then
-          CalcRun_v:= cHigh;
-        end if;
-        
-        if(CalcRun_v = cHigh) then
-        
-          case sMainSt is
-  
-            -- ADD1_ST state
-            -- 
-            when ADD1_ST =>
-              sAddIn1	<= cOneFp;
-              sAddIn2	<= sAbsIn;
-              sAddOND	<= cHigh;
+        sAddTrig<= cLow;
+        sDivTrig<= cLow;       
+        case sMainSt is
+
+          -- ADD1_ST state
+          -- 
+          when IDLE_ST =>
+            if(sEnRise = cHigh) then
+              sMainSt	<= ADD1_ST;
+              sResRdy	<= cLow;
+              sSigRes	<= (others=>'0');
+            end if;
+            
+          -- ADD1_ST state
+          -- 
+          when ADD1_ST =>
+            sAddIn1	<= cOneFp;
+            sAddIn2	<= sAbsIn;
+            sAddTrig<= cHigh;
+            sMainSt	<= DIV1_ST;
+            
+          -- DIV1_ST state
+          -- 
+          when DIV1_ST =>
+            if(sAddDone = cHigh) then
+              sDivIn1	<= sIn;
+              sDivIn2	<= sAddRes;
+              sDivTrig<= cHigh;
+              sMainSt	<= ADD2_ST;
+            else
               sMainSt	<= DIV1_ST;
-              
-            -- DIV1_ST state
-            -- 
-            when DIV1_ST =>
-              if(sAddDone = cHigh) then
-                sDivIn1	<= sIn;
-                sDivIn2	<= sAddRes;
-                sDivOND	<= cHigh;
-                sMainSt	<= ADD2_ST;
-              else
-                sMainSt	<= DIV1_ST;
-              end if;
-              
-            -- ADD2_ST state
-            -- 
-            when ADD2_ST =>
-              if(sDivDone = cHigh) then
-                sAddIn1	<= sDivRes;
-                sAddIn2	<= cOneFp;
-                sAddOND	<= cHigh;
-                sMainSt	<= DIV2_ST;
-              else
-                sMainSt	<= ADD2_ST;
-              end if;
-              
-            -- DIV2_ST state
-            -- 
-            when DIV2_ST =>
-              if(sAddDone = cHigh) then
-                sDivIn1	<= sAddRes;
-                sDivIn2	<= cTwoFp;
-                sDivOND	<= cHigh;
-                sMainSt	<= FINAL_ST;
-              else
-                sMainSt	<= DIV2_ST;
-              end if;
-              
-            -- FINAL_ST state
-            -- 
-            when FINAL_ST =>
-              if(sDivDone = cHigh) then
-                sMainSt	<= ADD1_ST;
-                sResRdy	<= cHigh;
-                CalcRun_v:= cLow;
-              else
-                sMainSt	<= FINAL_ST;
-              end if;
-  
-            -- others state
-            -- 
-            when others => 					
-  
-          end case;
-        end if;
+            end if;
+            
+          -- ADD2_ST state
+          -- 
+          when ADD2_ST =>
+            if(sDivDone = cHigh) then
+              sAddIn1	<= sDivRes;
+              sAddIn2	<= cOneFp;
+              sAddTrig<= cHigh;
+              sMainSt	<= DIV2_ST;
+            else
+              sMainSt	<= ADD2_ST;
+            end if;
+            
+          -- DIV2_ST state
+          -- 
+          when DIV2_ST =>
+            if(sAddDone = cHigh) then
+              sDivIn1	<= sAddRes;
+              sDivIn2	<= cTwoFp;
+              sDivTrig<= cHigh;
+              sMainSt	<= FINAL_ST;
+            else
+              sMainSt	<= DIV2_ST;
+            end if;
+            
+          -- FINAL_ST state
+          -- 
+          when FINAL_ST =>
+            if(sDivDone = cHigh) then
+              sMainSt	<= IDLE_ST;
+              sResRdy	<= cHigh;
+              sSigRes	<= sDivRes;
+            else
+              sMainSt	<= FINAL_ST;
+            end if;
+
+          -- others state
+          -- 
+          when others => 					
+
+        end case;
       end if;			
 	 end if;
 
@@ -286,15 +291,19 @@ begin
 	begin
     if(rising_edge(CLK)) then
       if(RST = cHigh) then
-        sTrig 	<= cLow;
-        sTrigDly<= cLow;
-        sIn		  <= (others=>'0');
-        sAbsIn	<= (others=>'0');
+        sTrig 	   <= cLow;
+        sTrigDly   <= cLow;
+        sIn		     <= (others=>'0');
+        sAbsIn	   <= (others=>'0');
+        sDivRdyDly <= cLow;
+        sAddRdyDly <= cLow;
       else
-        sTrig 	<= TRIG;
-        sTrigDly<= sTrig;
-        sIn		  <= INPUT;
-        sAbsIn	<= '0' & INPUT(30 downto 0);
+        sTrig 	   <= TRIG;
+        sTrigDly   <= sTrig;
+        sIn		     <= INPUT;
+        sAbsIn	   <= '0' & INPUT(30 downto 0);
+        sDivRdyDly <= sDivRdy;
+        sAddRdyDly <= sAddRdy;
       end if;
     end if;
 	end process;
@@ -309,13 +318,16 @@ begin
     -- Outputs
     --
     RDY		<= sResRdy;
-    OUTPUT<= sDivRes;
+    OUTPUT<= sSigRes;
     
     -- InOuts
     --
     
     -- Internals
     --
+	sEnRise  <= sTrig AND (NOT sTrigDly);
+	sDivDone <= sDivRdy AND (NOT sDivRdyDly);
+	sAddDone <= sAddRdy AND (NOT sAddRdyDly);
 
 
 end LvnT;

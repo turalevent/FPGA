@@ -85,7 +85,9 @@ architecture LvnT of f32_adder is
   signal sMantA, sMantB	: std_logic_vector(SIZE-1 downto 0);		
   signal sMantRes				: std_logic_vector(SIZE-1 downto 0);
   signal sReady 				: std_logic;
-  signal sEnB			      : std_logic;
+	signal sEN            : std_logic;
+	signal sEnDly1        : std_logic;
+	signal sEnRise        : std_logic;
 
 begin
 
@@ -125,20 +127,21 @@ begin
         sMantB      <= (others=>'0');		
         sMantRes    <= (others=>'0');
         sReady      <= cLow;
-        sEnB        <= cLow;
+							
         sNAN        <= cLow;
         sInf        <= cLow;
 		    vTemp       := (others=>'0');
         vIndxH      := 0;
         vIndxN      := 0;
 		  else
-        sReady  <= cLow;
-		    sEnB    <= EN;
+						
+					
         case sAdderStage is
         
           -- 0. Wait for Enable signal
           when ADDER_STAGE_IDLE =>
-            if((sEnB = cHigh) AND (EN = cLow)) then
+            if(sEnRise = cHigh) then
+             sReady <= cLow;
              sAdderStage <= ADDER_STAGE_CHECK_INPUTS;
            end if;
             
@@ -297,6 +300,22 @@ begin
 		end if;
 		
 	end process;
+
+	-- pRiseDedection process
+	-- Rising Edge detection of any required signal
+	pRiseDetection: process(CLK, RST) 
+	begin
+		
+    if(rising_edge(CLK)) then
+      if(RST = cHigh) then
+        sEN	    <= cLow;
+        sEnDly1	<= cLow;
+      else
+        sEN     <= EN;
+        sEnDly1 <= sEN;
+      end if;
+    end if;
+	end process;
  
 	--
 	-- Logic --------------------------------------------------
@@ -316,6 +335,7 @@ begin
 
 	-- Internals
 	--
+  sEnRise <= sEN AND (NOT sEnDly1);
 
 
 end LvnT;

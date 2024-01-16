@@ -95,18 +95,18 @@ architecture YTU of OutputLayer is
 	-- General Signals
 	signal WghSet_s		: std_logic;
 	signal Trig_s			: std_logic;
-	signal bTrig_s			: std_logic;
+	signal bTrig_s		: std_logic;
 	signal ResRdy_s		: std_logic;
 	signal Res_s			: std_logic_vector(31 downto 0);
 	
 	-- Neuron
-	signal NrnTrig_s		: std_logic;
-	signal NrnResRdy_s	: std_logic;
-	signal Wgh1_s			: std_logic_vector(31 downto 0);
-	signal Wgh2_s			: std_logic_vector(31 downto 0);
-	signal Wgh3_s			: std_logic_vector(31 downto 0);
-	signal Wgh4_s			: std_logic_vector(31 downto 0);
-	signal Wgh5_s			: std_logic_vector(31 downto 0);
+	signal NrnTrig_s	  : std_logic;
+	signal NrnResRdy_s  : std_logic;
+	signal Wgh1_s			  : std_logic_vector(31 downto 0);
+	signal Wgh2_s			  : std_logic_vector(31 downto 0);
+	signal Wgh3_s			  : std_logic_vector(31 downto 0);
+	signal Wgh4_s			  : std_logic_vector(31 downto 0);
+	signal Wgh5_s			  : std_logic_vector(31 downto 0);
 	signal NeuronRes_s	: std_logic_vector(31 downto 0);
 	signal NrnResArry_s	: Array2x32_t;
 	signal WghArry_s		: Array10x32_t;
@@ -137,7 +137,7 @@ begin
 		WGH3 	=> Wgh3_s,
 		WGH4 	=> Wgh4_s,
 		WGH5 	=> Wgh5_s,
-		RDY	=> NrnResRdy_s,
+		RDY	  => NrnResRdy_s,
 		OUTPUT=> NeuronRes_s
 	);
 
@@ -150,24 +150,24 @@ begin
 		if(RST = High_c) then
 			
 			ResRdy_s		<= Low_c;
-			NrnTrig_s	<= Low_c;
-			Wgh1_s		<= (others=>'0');
-			Wgh2_s		<= (others=>'0');
-			Wgh3_s		<= (others=>'0');
-			Wgh4_s		<= (others=>'0');
-			Wgh5_s		<= (others=>'0');
+			NrnTrig_s	  <= Low_c;
+			Wgh1_s		  <= (others=>'0');
+			Wgh2_s		  <= (others=>'0');
+			Wgh3_s		  <= (others=>'0');
+			Wgh4_s		  <= (others=>'0');
+			Wgh5_s		  <= (others=>'0');
 			NrnResArry_s<= (others=>(others=>'0'));
-			Ctr_v			:= 0;
+			Ctr_v			  := 0;
 			
 		elsif( rising_edge( CLK )) then
 
-			ResRdy_s	<= Low_c;
+			ResRdy_s <= Low_c;
 			NrnTrig_s<= Low_c;
 
 			-- Trig Multiplier
 			if(bTrig_s = Low_c AND Trig_s = High_c) then
-				NrnTrig_s<= High_c;
-				Ctr_v	 	:= 0;
+				NrnTrig_s <= High_c;
+				Ctr_v	 	  := 0;
 			end if;
 
 			if(NrnResRdy_s = High_c) then
@@ -175,8 +175,8 @@ begin
 				if(Ctr_v = NEURON_NUM-1) then
 					ResRdy_s	<= High_c;
 				else
-					NrnTrig_s<= High_c;
-					Ctr_v		:= Ctr_v + 1;
+					NrnTrig_s <= High_c;
+					Ctr_v		  := Ctr_v + 1;
 				end if;
 			end if;
 				
@@ -216,13 +216,13 @@ begin
 	begin
 
 		if(RST = High_c) then
-			WghSet_s	<= Low_c;
+			WghSet_s<= Low_c;
 			Trig_s 	<= Low_c;
-			bTrig_s 	<= Low_c;
+			bTrig_s <= Low_c;
 		elsif( rising_edge( CLK )) then
-			WghSet_s	<= WGH_SET;
+			WghSet_s<= WGH_SET;
 			Trig_s 	<= TRIG;
-			bTrig_s 	<= Trig_s;
+			bTrig_s <= Trig_s;
 		end if;
 
 	end process;
@@ -236,7 +236,7 @@ begin
 
 	-- Outputs
 	--
-	RDY		<= ResRdy_s;
+	RDY		  <= ResRdy_s;
 	OUTPUT1	<= NrnResArry_s(0)(31 downto 0);
 	OUTPUT2	<= NrnResArry_s(1)(31 downto 0);
 	

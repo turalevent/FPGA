@@ -86,7 +86,7 @@ architecture LvnT of f32_adder is
   signal sMantRes				: std_logic_vector(SIZE-1 downto 0);
   signal sReady 				: std_logic;
 	signal sEN            : std_logic;
-	signal sEnDly1        : std_logic;
+	signal sEnDly        : std_logic;
 	signal sEnRise        : std_logic;
 
 begin
@@ -306,10 +306,10 @@ begin
     if(rising_edge(CLK)) then
       if(RST = cHigh) then
         sEN	    <= cLow;
-        sEnDly1	<= cLow;
+        sEnDly	<= cLow;
       else
         sEN     <= EN;
-        sEnDly1 <= sEN;
+        sEnDly <= sEN;
       end if;
     end if;
 	end process;
@@ -332,7 +332,7 @@ begin
 
 	-- Internals
 	--
-  sEnRise <= sEN AND (NOT sEnDly1);
+  sEnRise <= sEN AND (NOT sEnDly);
 
 
 end LvnT;

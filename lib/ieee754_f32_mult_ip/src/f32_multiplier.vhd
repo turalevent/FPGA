@@ -77,7 +77,9 @@ architecture LvnT of f32_multiplier is
 	signal sNAN          : std_logic;
 	signal sInf          : std_logic;
 	signal sRes          : std_logic_vector(31 downto 0);
-	signal sEnB          : std_logic;
+	signal sEN           : std_logic;
+	signal sEnDly1       : std_logic;
+	signal sEnRise       : std_logic;
 	signal sSignRes			 : std_logic := '0';
 	signal sExpRes			 : std_logic_vector(8 downto 0);
 	signal sMantRes			 : std_logic_vector(47 downto 0);	
@@ -117,19 +119,20 @@ begin
         sNAN    <= cLow;
         sInf    <= cLow;
         sReady  <= cLow;
-        sEnB    <= cLow;
+						
         vIndxH	:= 0;
 		  else
-		    sEnB  <= EN;
-		    sReady<= cLow;        
+				  
+							
         case sMultStage is
         
           -- 0. Wait for Enable signal,
           -- Decompose into Sign Exponent and Mantissa
           when MULT_STAGE_IDLE =>
-            if((sEnB = cHigh) AND (EN = cLow)) then
+            if(sEnRise = cHigh) then
               sNAN      <= cLow;
               sInf      <= cLow;
+              sReady    <= cLow; 
               sMultStage<= MULT_STAGE_CHECK_INPUTS;
               sExpA		  <= '0' & A(30 downto 23); -- Include carry bit for addition
               sExpB		  <= '0' & B(30 downto 23); -- Include carry bit for addition
@@ -215,6 +218,22 @@ begin
 		end if;
 		
 	end process;
+
+	-- pRiseDedection process
+	-- Rising Edge detection of any required signal
+	pRiseDetection: process(CLK, RST) 
+	begin
+		
+    if(rising_edge(CLK)) then
+      if(RST = cHigh) then
+        sEN	    <= cLow;
+        sEnDly1	<= cLow;
+      else
+        sEN     <= EN;
+        sEnDly1 <= sEN;
+      end if;
+    end if;
+	end process;
  
 	--
 	-- Logic --------------------------------------------------
@@ -235,6 +254,7 @@ begin
 
 	-- Internals
 	--
+  sEnRise <= sEN AND (NOT sEnDly1);
 
 
 end LvnT;

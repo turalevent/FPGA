@@ -291,7 +291,7 @@ BEGIN
       wait for CLK_period;
 		TRIG	<= '0';
 		
-      wait for 500 us;	
+      wait for 2000 us;	
 		
 		assert false
 		report "Sim Finished"
